@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider, Appbar, DefaultTheme } from 'react-native-paper';
+import { Provider as PaperProvider, Appbar, DefaultTheme, BottomNavigation } from 'react-native-paper';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 
 
@@ -9,42 +9,48 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'tomato',
-    accent: 'yellow',
+    primary: 'darkcyan',
+    accent: 'white',
   },
 };
 
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+const Add = () => <Text>Add</Text>;
+const Map = () => <Text>Map</Text>;
+
 
 export default function App() {
 
-  const _goBack = () => console.log('Went back');
+  const _goBack = () => console.log('Went back')
 
-  const _handleSearch = () => console.log('Searching');
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'map', title: 'Map', icon: 'map' },
+    { key: 'add', title: 'Add', icon: 'plus' }
+  ]);
 
-  const _handleMore = () => console.log('Shown more');
+  const renderScene = BottomNavigation.SceneMap({
+    add: Add,
+    map: Map
+  });
+
+  let options = [
+    { id:1, value: 'Construction', icon: 'tool' },
+    { id:2, value: 'Traffipax', icon: 'police-badge' },
+    { id:3, value: 'Incident', icon: 'warning' }
+  ];
 
   return (
       <PaperProvider theme={theme}>
         <Appbar.Header>
           <Appbar.BackAction onPress={_goBack} />
           <Appbar.Content title="Mobil Academy" subtitle="helló levi" />
-          <Appbar.Action icon="magnify" onPress={_handleSearch} />
-          <Appbar.Action icon="dots-vertical" onPress={_handleMore} />
         </Appbar.Header>
 
-        <Card>
-          <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent} />
-          <Card.Content>
-            <Title>Card title</Title>
-            <Paragraph>Ezt csak úgy csináltam tesztelésre</Paragraph>
-          </Card.Content>
-          <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-          <Card.Actions>
-            <Button>Cancel</Button>
-            <Button>Ok</Button>
-          </Card.Actions>
-        </Card>
+        <BottomNavigation
+          navigationState={{ index, routes }}
+          onIndexChange={setIndex}
+          renderScene={renderScene}
+        />
       </PaperProvider>
     );
 }
