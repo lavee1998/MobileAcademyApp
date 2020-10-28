@@ -2,8 +2,9 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Provider as PaperProvider, Appbar, DefaultTheme, BottomNavigation } from 'react-native-paper';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
-
+import MapView from 'react-native-maps';
+import MapScreen from './screens/MapScreen';
+import AddScreen from './screens/AddScreen';
 
 const theme = {
   ...DefaultTheme,
@@ -14,9 +15,8 @@ const theme = {
   },
 };
 
-const Add = () => <Text>Add</Text>;
-const Map = () => <Text>Map</Text>;
-
+const Map = () => <MapScreen/>;
+const Add = () => <AddScreen/>;
 
 export default function App() {
 
@@ -32,12 +32,6 @@ export default function App() {
     add: Add,
     map: Map
   });
-
-  let options = [
-    { id:1, value: 'Construction', icon: 'tool' },
-    { id:2, value: 'Traffipax', icon: 'police-badge' },
-    { id:3, value: 'Incident', icon: 'warning' }
-  ];
 
   return (
       <PaperProvider theme={theme}>
