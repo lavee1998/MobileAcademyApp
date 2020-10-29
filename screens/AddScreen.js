@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Picker, View } from 'react-native';
-import { Card, Title, Paragraph, Button } from 'react-native-paper';
+import { Card, Title, Button } from 'react-native-paper';
+import MapView from 'react-native-maps';
+
+const send = () => console.log('Hellóóó');
 
 export default class AddScreen extends Component {
     state = {
@@ -22,10 +25,19 @@ export default class AddScreen extends Component {
                             <Picker.Item label="Incident" value="3" />
                         </Picker>
                         <Title>2. Choose the location</Title>
-                        <Paragraph>Card content</Paragraph>
+                        <MapView
+                            style={{width:'100%', height:'65%', alignContent: 'center'}}
+                            loadingEnabled={true}
+                            initialRegion={{
+                            latitude: 37.78825,
+                            longitude: -122.4324,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                            }}
+                        />
                     </Card.Content>
                     <Card.Actions>
-                        <Button>Send</Button>
+                        <Button onPress={send}>Send</Button>
                     </Card.Actions>
                 </Card>
             </View>
