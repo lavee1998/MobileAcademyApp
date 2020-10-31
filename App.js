@@ -1,10 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Provider as PaperProvider, Appbar, DefaultTheme, BottomNavigation } from 'react-native-paper';
-import MapView from 'react-native-maps';
-import MapScreen from './screens/MapScreen';
-import AddScreen from './screens/AddScreen';
+import { StatusBar } from 'expo-status-bar'
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import {
+  Provider as PaperProvider,
+  Appbar,
+  DefaultTheme,
+  BottomNavigation,
+} from 'react-native-paper'
+import MapScreen from './components/MapView'
+import AddView from './components/AddView'
+import reducer from './reducer'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
 
 const theme = {
   ...DefaultTheme,
@@ -13,27 +20,29 @@ const theme = {
     primary: 'darkcyan',
     accent: 'white',
   },
-};
+}
 
-const Map = () => <MapScreen/>;
-const Add = () => <AddScreen/>;
+const Map = () => <MapScreen />
+const Add = () => <AddView />
 
-export default function App() {
+const store = createStore(reducer)
 
+export default App = () => {
   const _goBack = () => console.log('Went back')
 
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([
     { key: 'map', title: 'Map', icon: 'map' },
-    { key: 'add', title: 'Add', icon: 'plus' }
-  ]);
+    { key: 'add', title: 'Add', icon: 'plus' },
+  ])
 
   const renderScene = BottomNavigation.SceneMap({
     add: Add,
-    map: Map
-  });
+    map: Map,
+  })
 
   return (
+    <Provider store={store} theme={DefaultTheme}>
       <PaperProvider theme={theme}>
         <Appbar.Header>
           <Appbar.BackAction onPress={_goBack} />
@@ -46,5 +55,6 @@ export default function App() {
           renderScene={renderScene}
         />
       </PaperProvider>
-    );
+    </Provider>
+  )
 }
