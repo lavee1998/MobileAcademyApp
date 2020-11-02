@@ -1,14 +1,14 @@
 import React, { Component, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 
 import { SafeAreaView } from 'react-native'
 import { Card, Title, Button, TextInput } from 'react-native-paper'
 import MapView, { AnimatedRegion } from 'react-native-maps'
 import DropDown from 'react-native-paper-dropdown'
+import { ScrollView, View, Image } from 'react-native'
 
-const AddView = ({ markers,addMarker }) => {
-  const [current, setCurrent] = React.useState('1')
+const AddView = ({ markers, addMarker }) => {
   const [currentRegion, setCurrentRegion] = React.useState(null)
   const [showDropDown, setShowDropDown] = React.useState(false)
   const [action, setAction] = React.useState()
@@ -24,7 +24,7 @@ const AddView = ({ markers,addMarker }) => {
   }
 
   const send = () => {
-    addMarker(action, 9, marker.latitude , marker.longitude)
+    addMarker(action, 9, marker.latitude, marker.longitude)
     console.log(marker)
   }
 
@@ -44,57 +44,87 @@ const AddView = ({ markers,addMarker }) => {
 
   const actionList = [
     { value: 0, label: 'Traffipax' },
-    { value: 1, label: 'Incident' },
+    { value: 1, label: 'Accident' },
     { value: 2, label: 'Construction' },
   ]
 
   return (
-    <SafeAreaView>
-      <Card>
-        <Card.Title title="Send new perception" />
-        <Card.Content>
-          <Title>1. Choose the type(test)</Title>
-          <DropDown
-            label={'Type of action'}
-            mode={'outlined'}
-            value={action}
-            setValue={setAction}
-            list={actionList}
-            visible={showDropDown}
-            showDropDown={() => setShowDropDown(true)}
-            onDismiss={() => setShowDropDown(false)}
-            inputProps={{
-              right: <TextInput.Icon name={'menu-down'} />,
-            }}
-          />
-          <Title>2. Choose the location</Title>
-          <GooglePlacesAutocomplete
-      placeholder='Search'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log(data, details);
-      }}
-     
-    />
-          <MapView
-            style={{ width: '100%', height: '55%', alignContent: 'center' }}
-            loadingEnabled={true}
-            defaultRegion={currentRegion}
-            onPress={(e) => setMarker(e.nativeEvent.coordinate)}
-          >
-            {marker && <MapView.Marker coordinate={marker} />}
-            {markers.map((marker, i) => {
-              return <MapView.Marker key={i} coordinate={marker} />
-            })}
-          </MapView>
-        </Card.Content>
-        <Card.Actions>
-          <Button style={{ textAlign: 'center', alignContent: 'center' }} onPress={() => send()}>
-            Send
-          </Button>
-        </Card.Actions>
-      </Card>
-    </SafeAreaView>
+    <ScrollView>
+      <View>
+        <Card>
+          <Card.Title title="Send new perception" />
+          <Card.Content>
+            <Title>1. Choose the type(test)</Title>
+
+            <DropDown
+              label={'Type of action'}
+              mode={'outlined'}
+              value={action}
+              setValue={setAction}
+              list={actionList}
+              visible={showDropDown}
+              showDropDown={() => setShowDropDown(true)}
+              onDismiss={() => setShowDropDown(false)}
+              inputProps={{
+                right: <TextInput.Icon name={'menu-down'} />,
+              }}
+            />
+            <Title>2. Choose the location</Title>
+            <GooglePlacesAutocomplete
+              placeholder="Search"
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                console.log(data, details)
+              }}
+            />
+            <View>
+              <MapView
+                style={{ width: '100%', height: 400, alignContent: 'center' }}
+                loadingEnabled={true}
+                defaultRegion={currentRegion}
+                onPress={(e) => setMarker(e.nativeEvent.coordinate)}
+              >
+                {marker && <MapView.Marker coordinate={marker} />}
+                {markers.map((marker, i) => {
+                  var markerSource = ""
+                  switch (marker.type) {
+                    case 0: 
+                      markerSource = require('../../images/tc_logo.png')
+                      break
+                    case 1: 
+                      markerSource = require('../../images/traffic_accident.png')
+                      break
+                    case 2: 
+                      markerSource = require('../../images/construction_logo.png')
+                      break
+                    default: markerSource = require('../../images/tc_logo.png')
+                  }
+                  console.log(markerSource)
+                  return (
+                    <MapView.Marker key={i} coordinate={marker}>
+                      <Image
+                        source={markerSource}
+                        style={{ height: 55, width: 55 }}
+                      />
+                    </MapView.Marker>
+                  )
+                })}
+              </MapView>
+            </View>
+          </Card.Content>
+          <Card.Actions>
+            <View>
+              <Button
+                style={{ textAlign: 'center', alignContent: 'center' }}
+                onPress={() => send()}
+              >
+                Send
+              </Button>
+            </View>
+          </Card.Actions>
+        </Card>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -106,10 +136,10 @@ const mapStateToProps = (state /*, ownProps*/) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     // dispatching plain actions
-    addMarker: (type,id, latitude, longitude) =>
+    addMarker: (type, id, latitude, longitude) =>
       dispatch({
         type: 'ADD_MARKER',
-        payload: { type: type,id: id, latitude: latitude, longitude: longitude },
+        payload: { type: type, id: id, latitude: latitude, longitude: longitude },
       }),
   }
 }
