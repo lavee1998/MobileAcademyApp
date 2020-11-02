@@ -42,7 +42,7 @@ export default App = () => {
   })
 
   return (
-    <Provider store={store} theme={DefaultTheme}>
+    <Provider store={store}>
       <PaperProvider theme={theme}>
         <Appbar.Header>
           <Appbar.BackAction onPress={_goBack} />

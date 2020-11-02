@@ -1,28 +1,40 @@
+import { ActionSheetIOS } from 'react-native'
+
 const initialState = {
-  taskList: [
+  markers: [
     {
       id: 1,
-      question: 'What is my name?',
-      answers: ['Pisti', 'Ágota', 'Rétes', 'LEVI-goodanswer'],
-      goodAnswerId: '3',
+      latitude: 47.41208317667451,
+      longitude: 19.200159628750264,
     },
     {
       id: 2,
-      question: 'What is my second name?',
-      answers: ['Pisti-goodanswer', 'KalapKabát', 'Rétes', 'Akarok már fifázni'],
-      goodAnswerId: '0',
+      latitude: 47.51208317667451,
+      longitude: 19.300159628750264,
     },
     {
       id: 3,
-      question: 'What is my last name?',
-      answers: ['Ádám-bad-answer', 'NemÁdám', 'lkélk', 'élkélk-good-answer'],
-      goodAnswerId: '3',
+      latitude: 49.51208317667451,
+      longitude: 19.300159628750264,
     },
   ],
 }
 
-function reducer(state = initialState) {
-  return state
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'ADD_MARKER':
+      console.log(action.payload)
+      let newMarker = {
+        id: action.payload.id,
+        latitude: action.payload.latitude,
+        longitude: action.payload.longitude,
+      }
+      state.markers.push(newMarker)
+      return state
+
+    default:
+      return state
+  }
 }
 
 export default reducer

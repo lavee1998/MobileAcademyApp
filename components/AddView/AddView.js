@@ -1,17 +1,18 @@
 import React, { Component, useEffect } from 'react'
+import { connect, useDispatch } from 'react-redux'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
 import { SafeAreaView } from 'react-native'
 import { Card, Title, Button, TextInput } from 'react-native-paper'
 import MapView, { AnimatedRegion } from 'react-native-maps'
 import DropDown from 'react-native-paper-dropdown'
 
-const AddView = () => {
+const AddView = ({ markers,addMarker }) => {
   const [current, setCurrent] = React.useState('1')
   const [currentRegion, setCurrentRegion] = React.useState(null)
   const [showDropDown, setShowDropDown] = React.useState(false)
   const [action, setAction] = React.useState()
   const [marker, setMarker] = React.useState()
-
-  const send = () => console.log('Hellóóó')
 
   const getCurrentLocation = () => {
     return new Promise((resolve, reject) => {
@@ -20,6 +21,11 @@ const AddView = () => {
         (e) => reject(e)
       )
     })
+  }
+
+  const send = () => {
+    addMarker(action, 9, marker.latitude , marker.longitude)
+    console.log(marker)
   }
 
   useEffect(() => {
@@ -62,21 +68,50 @@ const AddView = () => {
             }}
           />
           <Title>2. Choose the location</Title>
+          <GooglePlacesAutocomplete
+      placeholder='Search'
+      onPress={(data, details = null) => {
+        // 'details' is provided when fetchDetails = true
+        console.log(data, details);
+      }}
+     
+    />
           <MapView
-            style={{ width: '100%', height: '65%', alignContent: 'center' }}
+            style={{ width: '100%', height: '55%', alignContent: 'center' }}
             loadingEnabled={true}
             defaultRegion={currentRegion}
             onPress={(e) => setMarker(e.nativeEvent.coordinate)}
           >
             {marker && <MapView.Marker coordinate={marker} />}
+            {markers.map((marker, i) => {
+              return <MapView.Marker key={i} coordinate={marker} />
+            })}
           </MapView>
         </Card.Content>
         <Card.Actions>
-          <Button onPress={send}>Send</Button>
+          <Button style={{ textAlign: 'center', alignContent: 'center' }} onPress={() => send()}>
+            Send
+          </Button>
         </Card.Actions>
       </Card>
     </SafeAreaView>
   )
 }
 
-export default AddView
+const mapStateToProps = (state /*, ownProps*/) => ({
+  markers: state.markers,
+  //nextPage: state.stats.nextPage,
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // dispatching plain actions
+    addMarker: (type,id, latitude, longitude) =>
+      dispatch({
+        type: 'ADD_MARKER',
+        payload: { type: type,id: id, latitude: latitude, longitude: longitude },
+      }),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddView)
