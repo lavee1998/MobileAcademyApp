@@ -19,8 +19,8 @@ const initialState = {
       latitude: 49.51208317667451,
       longitude: 19.300159628750264,
       type: 2
-    },
-  ],
+    }
+  ]
 }
 
 function reducer(state = initialState, action) {
@@ -31,6 +31,7 @@ function reducer(state = initialState, action) {
         id: action.payload.id,
         latitude: action.payload.latitude,
         longitude: action.payload.longitude,
+        type: action.payload.type
       }
       state.markers.push(newMarker)
       return state

@@ -7,7 +7,7 @@ import {
   DefaultTheme,
   BottomNavigation,
 } from 'react-native-paper'
-import MapScreen from './components/MapView'
+import MainMapView from './components/MapView'
 import AddView from './components/AddView'
 import reducer from './reducer'
 import { Provider } from 'react-redux'
@@ -22,7 +22,7 @@ const theme = {
   },
 }
 
-const Map = () => <MapScreen />
+const Map = () => <MainMapView />
 const Add = () => <AddView />
 
 const store = createStore(reducer)

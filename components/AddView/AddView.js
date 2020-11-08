@@ -1,6 +1,5 @@
 import React, { Component, useEffect } from 'react'
 import { connect, useDispatch } from 'react-redux'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 
 import { SafeAreaView } from 'react-native'
 import { Card, Title, Button, TextInput } from 'react-native-paper'
@@ -23,9 +22,14 @@ const AddView = ({ markers, addMarker }) => {
     })
   }
 
+  const actionList = [
+    { value: 0, label: 'Traffipax' },
+    { value: 1, label: 'Accident'  },
+    { value: 2, label: 'Construction' },
+  ]
+
   const send = () => {
     addMarker(action, 9, marker.latitude, marker.longitude)
-    console.log(marker)
   }
 
   useEffect(() => {
@@ -41,12 +45,6 @@ const AddView = ({ markers, addMarker }) => {
     })
     console.log(currentRegion)
   }, [])
-
-  const actionList = [
-    { value: 0, label: 'Traffipax' },
-    { value: 1, label: 'Accident' },
-    { value: 2, label: 'Construction' },
-  ]
 
   return (
     <ScrollView>
@@ -70,17 +68,11 @@ const AddView = ({ markers, addMarker }) => {
               }}
             />
             <Title>2. Choose the location</Title>
-            <GooglePlacesAutocomplete
-              placeholder="Search"
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details)
-              }}
-            />
             <View>
               <MapView
                 style={{ width: '100%', height: 400, alignContent: 'center' }}
                 loadingEnabled={true}
+                zoomEnabled={true}
                 defaultRegion={currentRegion}
                 onPress={(e) => setMarker(e.nativeEvent.coordinate)}
               >
@@ -99,12 +91,12 @@ const AddView = ({ markers, addMarker }) => {
                       break
                     default: markerSource = require('../../images/tc_logo.png')
                   }
-                  console.log(markerSource)
+                  console.log(markers);
                   return (
                     <MapView.Marker key={i} coordinate={marker}>
                       <Image
                         source={markerSource}
-                        style={{ height: 55, width: 55 }}
+                        style={{ height: 50, width: 55 }}
                       />
                     </MapView.Marker>
                   )
